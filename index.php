@@ -1,6 +1,22 @@
 <?php
 echo "Benvenuto nel database film! <br><br>";
 
+// 1. DEFINISCO TRAIT----------------------------------------------------------
+trait Discountable {
+    public $price;      
+    public $discount;   
+
+    // Metodo
+    public function getDiscountedPrice() {
+        return $this->price - $this->discount;
+    }
+}
+//----------------------------------------------------------------------------------
+
+
+
+
+
 //DEFINISCO CLASSE GENRE-------------------------------------------------------
 class Genre
 {
@@ -25,6 +41,7 @@ class Genre
 //DEFINISCO CLASSE MOVIE--------------------------------------------------------------
 class Movie
 {
+    use Discountable;
     public $name;
     public $release;
     public $director;
@@ -47,7 +64,7 @@ class Movie
     public function getGenresString() {
         $names = [];
         foreach ($this->genres as $genre) {
-            // Estraiamo il nome da ogni oggetto Genre nell'array
+            // Estrggo il nome da ogni oggetto Genre nell'array
             $names[] = $genre->name;
         }
         return implode(", ", $names); // Unisce i nomi con una virgola
@@ -79,6 +96,13 @@ $drama = new Genre("Drammatico");
 $movie1 = new Movie("Oppenheimer", 2023, "Christopher Nolan", [$action, $sciFi], "Inglese");
 $movie2 = new Movie("Pulp Fiction", 1994, "Quentin Tarantino", [$action, $drama], "Inglese");
 
+//APPLICO I VALORI DI DISCOUNTABLE 
+$movie1->price = 15;     // Prezzo base 15€
+$movie1->discount = 3;   // Sconto 3€
+
+$movie2->price = 10;    
+$movie2->discount = 2;  
+
 //STAMPA DEI RISULTATI
 echo "--- DETTAGLI FILM 1 ---<br>";
 echo "Titolo: " . $movie1->name . "<br>";
@@ -87,6 +111,8 @@ echo "Regista: " . $movie1->director . "<br>";
 echo "Lingua: " . $movie1->language . "<br>";
 echo "Generi: " . $movie1->getGenresString() . "<br>"; // Usiamo il metodo per l'array
 echo "Recente? " . $movie1->isRecent() . "<br>";
+echo "Prezzo Originale: " . $movie1->price . "€<br>";
+echo "Prezzo Scontato: " . $movie1->getDiscountedPrice() . "€<br>"; // Metodo del trait
 
 echo "<br>-----------------------<br><br>";
 
@@ -97,5 +123,8 @@ echo "Regista: " . $movie2->director . "<br>";
 echo "Lingua: " . $movie2->language . "<br>";
 echo "Generi: " . $movie2->getGenresString() . "<br>"; // Usiamo il metodo per l'array
 echo "Recente? " . $movie2->isRecent() . "<br>";
+echo "Prezzo Originale: " . $movie2->price . "€<br>";
+echo "Prezzo Scontato: " . $movie2->getDiscountedPrice() . "€<br>"; // Metodo del trait
+
 
 ?>
