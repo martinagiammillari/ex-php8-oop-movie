@@ -1,130 +1,61 @@
 <?php
-echo "Benvenuto nel database film! <br><br>";
+// Importo traits
+require_once './Traits/Discountable.php';
 
-// 1. DEFINISCO TRAIT----------------------------------------------------------
-trait Discountable {
-    public $price;      
-    public $discount;   
+// Importo le classi
+require_once './Models/Genre.php';
+require_once './Models/Movie.php';
 
-    // Metodo
-    public function getDiscountedPrice() {
-        return $this->price - $this->discount;
-    }
-}
-//----------------------------------------------------------------------------------
-
-
-
-
-
-//DEFINISCO CLASSE GENRE-------------------------------------------------------
-class Genre
-{
-    public $name;
-
-
-    //COSTRUTTORE GENRE
-    public function __construct($name,)
-    {
-        $this->name = $name;
-        
-    }
-
-}
-//-----------------------------------------------------------------------------
-
-
-
-
-
-
-//DEFINISCO CLASSE MOVIE--------------------------------------------------------------
-class Movie
-{
-    use Discountable;
-    public $name;
-    public $release;
-    public $director;
-    public $language;
-    public $genres;
-
-    //COSTRUTTORE MOVIE
-    function __construct($name, $release, $director, array $genres, $language)
-    {
-        $this->name = $name;
-        $this->release = $release;
-        $this->director = $director;
-        $this->genres = $genres;
-        $this->language = $language;
-
-
-    }
-
-    // MEOTDO MOVIE PER OTTENERE TUTTI I NOMI GENERI 
-    public function getGenresString() {
-        $names = [];
-        foreach ($this->genres as $genre) {
-            // Estrggo il nome da ogni oggetto Genre nell'array
-            $names[] = $genre->name;
-        }
-        return implode(", ", $names); // Unisce i nomi con una virgola
-    }
-
-
-    //METODO MOVIE
-    public function isRecent()
-    {
-        if ($this->release >= 2020) {
-            return "Sì, è un film recente.";
-        } else {
-            return "No, è un classico.";
-        }
-    }
-}
-//-----------------------------------------------------------------------------
-
-
-
-//ISTANZIO 2 OGGETTI GENRE
-$action = new Genre("Azione");
-$sciFi = new Genre("Fantascienza");
-$drama = new Genre("Drammatico");
-
-
-
-//ISTAZIO 2 OGGETTI MOVIE
-$movie1 = new Movie("Oppenheimer", 2023, "Christopher Nolan", [$action, $sciFi], "Inglese");
-$movie2 = new Movie("Pulp Fiction", 1994, "Quentin Tarantino", [$action, $drama], "Inglese");
-
-//APPLICO I VALORI DI DISCOUNTABLE 
-$movie1->price = 15;     // Prezzo base 15€
-$movie1->discount = 3;   // Sconto 3€
-
-$movie2->price = 10;    
-$movie2->discount = 2;  
-
-//STAMPA DEI RISULTATI
-echo "--- DETTAGLI FILM 1 ---<br>";
-echo "Titolo: " . $movie1->name . "<br>";
-echo "Anno: " . $movie1->release . "<br>";
-echo "Regista: " . $movie1->director . "<br>";
-echo "Lingua: " . $movie1->language . "<br>";
-echo "Generi: " . $movie1->getGenresString() . "<br>"; // Usiamo il metodo per l'array
-echo "Recente? " . $movie1->isRecent() . "<br>";
-echo "Prezzo Originale: " . $movie1->price . "€<br>";
-echo "Prezzo Scontato: " . $movie1->getDiscountedPrice() . "€<br>"; // Metodo del trait
-
-echo "<br>-----------------------<br><br>";
-
-echo "--- DETTAGLI FILM 2 ---<br>";
-echo "Titolo: " . $movie2->name . "<br>";
-echo "Anno: " . $movie2->release . "<br>";
-echo "Regista: " . $movie2->director . "<br>";
-echo "Lingua: " . $movie2->language . "<br>";
-echo "Generi: " . $movie2->getGenresString() . "<br>"; // Usiamo il metodo per l'array
-echo "Recente? " . $movie2->isRecent() . "<br>";
-echo "Prezzo Originale: " . $movie2->price . "€<br>";
-echo "Prezzo Scontato: " . $movie2->getDiscountedPrice() . "€<br>"; // Metodo del trait
-
-
+// Importo le info (qui viene creato l'array $movies)
+require_once './db.php';
 ?>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Film</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1 class="mb-4">I miei Film</h1>
+    <div class="row">
+        <?php foreach ($movies as $movie) { ?>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">
+                            <?php echo $movie->name; ?>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <strong>Uscita:</strong> <?php echo $movie->release; ?> 
+                            <small>(<?php echo $movie->isRecent(); ?>)</small>
+                        </h6>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <strong>Regia:</strong> <?php echo $movie->director; ?>
+                        </h6>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <strong>Lingua:</strong> <?php echo $movie->language; ?>
+                        </h6>
+                        
+                        <p class="mt-2 mb-1">
+                            <strong>Prezzo:</strong> <?php echo $movie->getDiscountedPrice(); ?>€
+                        </p>
+
+                        <div class="mt-2">
+                            <span class="badge bg-info text-dark">
+                                <?php echo $movie->getGenresString(); ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+
+</body>
+</html>
