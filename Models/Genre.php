@@ -2,6 +2,8 @@
 //DEFINISCO CLASSE GENRE-------------------------------------------------------
 class Genre
 {
+
+//DEFINISCO GLI ATTRIBUTI
     public $name;
 
 

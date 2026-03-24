@@ -6,7 +6,7 @@ require_once './Traits/Discountable.php';
 require_once './Models/Genre.php';
 require_once './Models/Movie.php';
 
-// Importo le info (qui viene creato l'array $movies)
+// Importo le info dal db
 require_once './db.php';
 ?>
 
@@ -23,6 +23,8 @@ require_once './db.php';
 <div class="container mt-4">
     <h1 class="mb-4">I miei Film</h1>
     <div class="row">
+
+    
         <?php foreach ($movies as $movie) { ?>
             <div class="col-md-4 mb-3">
                 <div class="card h-100 shadow-sm">

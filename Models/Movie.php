@@ -2,7 +2,11 @@
 //DEFINISCO CLASSE MOVIE--------------------------------------------------------------
 class Movie
 {
+
+    //UTILIZZO IL TRAIT
     use Discountable;
+
+    //DEFINISCO GLI ATTRIBUTI
     public $name;
     public $release;
     public $director;
